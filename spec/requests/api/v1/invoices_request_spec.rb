@@ -29,9 +29,8 @@ describe "Invoices API" do
       invoice = create(:invoice)
 
       get "/api/v1/invoices/find?customer_id=#{invoice.customer_id}"
-
+    
       #inv = JSON.parse(response.body)
-
       expect(response).to be_success
     end
   end
