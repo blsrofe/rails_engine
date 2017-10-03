@@ -3,6 +3,10 @@ module Api
     module Invoices
       class SearchController < ApplicationController
 
+        def index
+          render json: Invoice.where(search_params)
+        end
+
         def show
           render json: Invoice.find_by(search_params)
         end

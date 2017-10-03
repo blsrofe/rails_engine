@@ -36,5 +36,31 @@ describe "Invoices API" do
       expect(inv["status"]).to eq(invoice.status)
       expect(inv.class).to eq(Hash)
     end
+
+    it "can find multiple items" do
+      invoices = create_list(:invoice, 3)
+
+      get "/api/v1/invoices/find_all?customer_id=1&merchant_id=1"
+
+      inv = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(inv.count).to eq(3)
+
+      get "/api/v1/invoices/find_all?status=Shipped"
+
+      expect(inv.count).to eq(3)
+    end
+
+    it "can find a random item" do
+      invoices = create_list(:invoice, 5)
+
+      get "/api/v1/invoices/random.json"
+
+      inv = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(inv.class).to be(Hash)
+    end
   end
 end
