@@ -18,6 +18,20 @@ describe "Merchants search API" do
     merchant = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(merchant["name"]).to eq("Moe")    
+    expect(merchant["name"]).to eq("Moe")
+  end
+
+  it "can find all items by its parameters" do
+    merchant_1 = Merchant.create!(name: "Larry")
+    merchant_2 = Merchant.create!(name: "Curly")
+    merchant_3 = Merchant.create!(name: "Curly")
+
+
+    get "/api/v1/merchants/find_all?name=Curly"
+
+    merchants = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(merchants.count).to eq(2)
   end
 end
