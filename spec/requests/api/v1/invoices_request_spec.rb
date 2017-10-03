@@ -30,8 +30,11 @@ describe "Invoices API" do
 
       get "/api/v1/invoices/find?customer_id=#{invoice.customer_id}"
     
-      #inv = JSON.parse(response.body)
+      inv = JSON.parse(response.body)
+      
       expect(response).to be_success
+      expect(inv["status"]).to eq(invoice.status)
+      expect(inv.class).to eq(Hash)
     end
   end
 end
