@@ -3,6 +3,8 @@ require 'rails_helper'
 describe "Invoices API" do
   context "GET /invoices" do
     it "sends a list of invoices" do
+      Customer.create!(first_name: "Bob", last_name: "Smith")
+      create(:merchant)
       create_list(:invoice, 3)
 
       get '/api/v1/invoices.json'
@@ -14,6 +16,8 @@ describe "Invoices API" do
     end
 
     it "sends one invoice" do
+      Customer.create!(id: 1, first_name: "Bill", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
       invoice = create(:invoice)
 
       get "/api/v1/invoices/#{invoice.id}"
@@ -26,6 +30,8 @@ describe "Invoices API" do
     end
 
     it "can find one item" do
+      Customer.create!(id: 1, first_name: "Bill", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
       invoice = create(:invoice)
 
       get "/api/v1/invoices/find?customer_id=#{invoice.customer_id}"
@@ -38,6 +44,8 @@ describe "Invoices API" do
     end
 
     it "can find multiple items" do
+      Customer.create!(id: 1, first_name: "Bill", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
       invoices = create_list(:invoice, 3)
 
       get "/api/v1/invoices/find_all?customer_id=1&merchant_id=1"
@@ -53,6 +61,8 @@ describe "Invoices API" do
     end
 
     it "can find a random item" do
+      Customer.create!(id: 1, first_name: "Bill", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
       invoices = create_list(:invoice, 5)
 
       get "/api/v1/invoices/random.json"
