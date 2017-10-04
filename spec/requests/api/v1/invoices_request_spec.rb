@@ -19,7 +19,7 @@ describe "Invoices API" do
       get "/api/v1/invoices/#{invoice.id}"
 
       inv = JSON.parse(response.body)
-      
+
       expect(response).to be_success
       expect(inv["status"]).to eq(invoice.status)
       expect(inv["merchant_id"]).to eq(invoice.merchant_id)
@@ -29,9 +29,9 @@ describe "Invoices API" do
       invoice = create(:invoice)
 
       get "/api/v1/invoices/find?customer_id=#{invoice.customer_id}"
-    
+
       inv = JSON.parse(response.body)
-      
+
       expect(response).to be_success
       expect(inv["status"]).to eq(invoice.status)
       expect(inv.class).to eq(Hash)
@@ -62,5 +62,21 @@ describe "Invoices API" do
       expect(response).to be_success
       expect(inv.class).to be(Hash)
     end
+
+    it "returns a collection of associated transactions" do
+      invoice = create(:invoice)
+      transaction_1 = Transaction.create!(invoice_id: 1, credit_card_number: "1234123412341234", credit_card_expiration_date: "2012-03-23", result: "failed")
+      transaction_2 = Transaction.create!(invoice_id: 1, credit_card_number: "1234123412341234", credit_card_expiration_date: "2012-03-23", result: "success")
+      transaction_3 = Transaction.create!(invoice_id: 2, credit_card_number: "1234123412341234", credit_card_expiration_date: "2012-03-23", result: "failed")
+
+      get "/api/v1/invoices/#{invoice.id}/transactions"
+
+      transactions = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(transactions.count).to eq(2)
+      expect(transactions.first).to eq(transaction_1)
+    end
+
   end
 end
