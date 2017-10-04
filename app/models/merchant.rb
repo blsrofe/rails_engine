@@ -11,6 +11,7 @@ class Merchant < ApplicationRecord
       .where('invoices.merchant_id = ?', self.id)
       .group(:id)
       .order("count DESC")
+      .first
   end
 
 end
