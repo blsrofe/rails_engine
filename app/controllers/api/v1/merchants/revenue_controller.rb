@@ -3,8 +3,8 @@ module Api
     module Merchants
       class RevenueController < ApplicationController
         def show
-          binding.pry
-          render json: Merchant.joins(:transactions).where(transactions: {result: "success"}).pluck(:invoice_id).joins(:invoice_items).distinct.sum("unit_price * quantity")
+          # render json: Merchant.joins(:transactions).where(transactions: {result: "success"}).joins(:invoice_items).first.invoice_items.sum("unit_price * quantity")
+          render json: Merchant.joins(:transactions, :invoice_items).where(transactions: {result: "success"}).sum("invoice_items.quantity*invoice_items.unit_price")
         end
       end
     end
