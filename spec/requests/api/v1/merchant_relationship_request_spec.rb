@@ -27,8 +27,10 @@ describe "Merchant Relationships API" do
 
       get "/api/v1/merchants/#{merchant.id}/invoices"
 
+      json = JSON.parse(response.body)
+
       expect(response).to be_success
-      
+      expect(json.count).to eq(3)
     end
   end
 end
