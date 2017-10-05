@@ -90,7 +90,7 @@ describe "Merchants API" do
     expect(response).to be_success
 
     revenue = JSON.parse(response.body)
-    expect(revenue).to eq(800)
+    expect(revenue).to eq(8)
   end
 
   it "returns top merchants ranked by total number of items sold" do
