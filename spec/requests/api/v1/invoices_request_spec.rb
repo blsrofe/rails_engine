@@ -29,7 +29,9 @@ describe "Invoices API" do
       expect(inv["merchant_id"]).to eq(invoice.merchant_id)
     end
 
-    it "can find one invoice" do
+    it "can find one item" do
+      Customer.create!(id: 1, first_name: "Bill", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
       invoice = create(:invoice)
 
       get "/api/v1/invoices/find?customer_id=#{invoice.customer_id}"
@@ -71,20 +73,84 @@ describe "Invoices API" do
       expect(inv.class).to be(Hash)
     end
 
-    # it "returns a collection of associated transactions" do
-    #   invoice = create(:invoice)
-    #   transaction_1 = Transaction.create!(invoice_id: 1, credit_card_number: "1234123412341234", credit_card_expiration_date: "2012-03-23", result: "failed")
-    #   transaction_2 = Transaction.create!(invoice_id: 1, credit_card_number: "1234123412341234", credit_card_expiration_date: "2012-03-23", result: "success")
-    #   transaction_3 = Transaction.create!(invoice_id: 2, credit_card_number: "1234123412341234", credit_card_expiration_date: "2012-03-23", result: "failed")
-    #
-    #   get "/api/v1/invoices/#{invoice.id}/transactions"
-    #
-    #   transactions = JSON.parse(response.body)
-    #
-    #   expect(response).to be_success
-    #   expect(transactions.count).to eq(2)
-    #   expect(transactions.first).to eq(transaction_1)
-    # end
+    it "returns a collection of associated transactions" do
+      Customer.create!(id: 1, first_name: "Bob", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
+      invoice = Invoice.create!(id: 1, customer_id: 1, merchant_id: 1, status: "shipped")
+      invoice_2 = Invoice.create!(id: 2, customer_id: 1, merchant_id: 1, status: "shipped")
+      transaction_1 = Transaction.create!(invoice_id: 1, credit_card_number: "1234123412341234", credit_card_expiration_date: "2012-03-23", result: "failed")
+      transaction_2 = Transaction.create!(invoice_id: 1, credit_card_number: "1234123412341234", credit_card_expiration_date: "2012-03-23", result: "success")
+      transaction_3 = Transaction.create!(invoice_id: 2, credit_card_number: "1234123412341234", credit_card_expiration_date: "2012-03-23", result: "failed")
 
+      get "/api/v1/invoices/#{invoice.id}/transactions"
+
+      transactions = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(transactions.count).to eq(2)
+    end
+
+    it "returns a collection of associated invoice_items" do
+      Customer.create!(id: 1, first_name: "Bob", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
+      invoice = Invoice.create!(id: 1, customer_id: 1, merchant_id: 1, status: "shipped")
+      Item.create!(name: "item_1", description: "something", unit_price: 200, merchant_id: 1)
+      Item.create!(name: "item_2", description: "something", unit_price: 200, merchant_id: 1)
+      Item.create!(name: "item_3", description: "something", unit_price: 200, merchant_id: 1)
+      InvoiceItem.create!(id: 1, invoice_id: 1, item_id: 1, quantity: 1, unit_price: 100)
+      InvoiceItem.create!(id: 2, invoice_id: 1, item_id: 2, quantity: 2, unit_price: 150)
+      InvoiceItem.create!(id: 3, invoice_id: 1, item_id: 3, quantity: 3, unit_price: 200)
+
+      get "/api/v1/invoices/#{invoice.id}/invoice_items"
+
+      invoice_items = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(invoice_items.count).to eq(3)
+    end
+
+    it "returns a collection of associated items" do
+      Customer.create!(id: 1, first_name: "Bob", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
+      invoice = Invoice.create!(id: 1, customer_id: 1, merchant_id: 1, status: "shipped")
+      Item.create!(id: 1, name: "item_1", description: "something", unit_price: 200, merchant_id: 1)
+      Item.create!(id: 2, name: "item_2", description: "something", unit_price: 200, merchant_id: 1)
+      InvoiceItem.create!(id: 1, invoice_id: 1, item_id: 1, quantity: 1, unit_price: 100)
+      InvoiceItem.create!(id: 2, invoice_id: 1, item_id: 2, quantity: 2, unit_price: 150)
+
+
+      get "/api/v1/invoices/#{invoice.id}/items"
+
+      items = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(items.count).to eq(2)
+    end
+
+    it "returns an associated customer" do
+      Customer.create!(id: 1, first_name: "Bob", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
+
+      invoice = Invoice.create!(id: 1, customer_id: 1, merchant_id: 1, status: "shipped")
+
+      get "/api/v1/invoices/#{invoice.id}/customer"
+
+      customer = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(customer["first_name"]).to eq("Bob")
+    end
+
+    it "returns an associated merchant" do
+      Customer.create!(id: 1, first_name: "Bob", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
+      invoice = Invoice.create!(id: 1, customer_id: 1, merchant_id: 1, status: "shipped")
+
+      get "/api/v1/invoices/#{invoice.id}/merchant"
+
+      merchant = JSON.parse(response.body)
+      expect(response).to be_success
+      expect(merchant["name"]).to eq("Bob")
+    end
   end
 end

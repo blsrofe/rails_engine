@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 require 'rails_helper'
 
 describe "Customers API" do
@@ -34,3 +35,5 @@ describe "Customers API" do
     end
   end
 end
+=======
+>>>>>>> master

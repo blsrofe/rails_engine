@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe "Items API" do
   context "GET /items" do
     it "sends a list of items" do
-      create_list(:item, 3)
+      merchant = create(:merchant)
+      create_list(:item, 3, merchant_id: merchant.id)
 
       get "/api/v1/items.json"
 
@@ -14,7 +15,8 @@ RSpec.describe "Items API" do
     end
 
     it "sends one item" do
-      item = create(:item)
+      merchant = create(:merchant)
+      item = create(:item, merchant_id: merchant.id)
 
       get "/api/v1/items/#{item.id}"
 
@@ -26,7 +28,8 @@ RSpec.describe "Items API" do
     end
 
     it "can find one item" do
-      item = create_list(:item, 3, unit_price: 1006)
+      merchant = create(:merchant)
+      item = create_list(:item, 3, unit_price: 1006, merchant_id: merchant.id)
 
       get "/api/v1/items/find?name=#{item[1].name}"
 
@@ -54,7 +57,8 @@ RSpec.describe "Items API" do
     end
 
     it "can find multiple items" do
-      items = create_list(:item, 5)
+      merchant = create(:merchant)
+      items = create_list(:item, 5, merchant_id: merchant.id)
 
       get "/api/v1/items/find_all?merchant_id=#{items[1].merchant_id}"
 
@@ -66,7 +70,8 @@ RSpec.describe "Items API" do
     end
 
     it "can find a random item" do
-      items = create_list(:item, 5)
+      merchant = create(:merchant)
+      items = create_list(:item, 5, merchant_id: merchant.id)
 
       get "/api/v1/items/random.json"
 
@@ -74,6 +79,34 @@ RSpec.describe "Items API" do
 
       expect(response).to be_success
       expect(json.class).to be(Hash)
+    end
+
+    it "returns a collection of associated invoice items" do
+      Customer.create!(id: 1, first_name: "Bob", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
+      Invoice.create!(id: 1, customer_id: 1, merchant_id: 1, status: "shipped")
+      item = Item.create!(id: 1, name: "item_1", description: "something", unit_price: 200, merchant_id: 1)
+      InvoiceItem.create!(id: 1, invoice_id: 1, item_id: 1, quantity: 1, unit_price: 100)
+      InvoiceItem.create!(id: 2, invoice_id: 1, item_id: 1, quantity: 2, unit_price: 150)
+
+      get "/api/v1/items/#{item.id}/invoice_items"
+
+      invoice_items = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(invoice_items.count).to eq(2)
+    end
+
+    it "returns the associated merchant" do
+      Merchant.create!(id: 1, name: "Bob")
+      item = Item.create!(id: 1, name: "item_1", description: "something", unit_price: 200, merchant_id: 1)
+
+      get "/api/v1/items/#{item.id}/merchant"
+
+      merchant = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(merchant["name"]).to eq("Bob")
     end
   end
 end

@@ -1,6 +1,7 @@
 module Api
   module V1
     class CustomersController < ApplicationController
+
       def index
         render json: Customer.all
       end
@@ -8,6 +9,8 @@ module Api
       def show
         render json: Customer.find(params[:id])
       end
+
     end
   end
 end
+
