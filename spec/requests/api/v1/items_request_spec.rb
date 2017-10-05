@@ -24,5 +24,17 @@ RSpec.describe "Items API" do
       expect(json["name"]).to eq(item.name)
       expect(json["description"]).to eq(item.description)
     end
+
+    it "can find one item" do
+      item = create_list(:item, 3)
+
+      get "/api/v1/items/find?name=#{item[1].name}"
+
+      json = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(json["name"]).to eq(item[1].name)
+      expect(json["unit_price"]).to eq(item[1].unit_price)
+    end
   end
 end
