@@ -85,7 +85,7 @@ describe "Merchants API" do
     invoice_item_4 = InvoiceItem.create!(item_id: 3, invoice_id: 3, quantity: 1, unit_price: 300)
 
 
-    get '/api/v1/merchants/1/revenue'
+    get "/api/v1/merchants/#{merchant.id}/revenue"
 
     expect(response).to be_success
 
