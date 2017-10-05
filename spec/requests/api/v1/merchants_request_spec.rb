@@ -119,9 +119,8 @@ describe "Merchants API" do
 
     get "/api/v1/merchants/most_items?quantity=3"
     merchants = JSON.parse(response.body)
-
     expect(response).to be_success
     expect(merchants.count).to eq(3)
-    expect(merchants.first).to eq(merchant_4)
+    expect(merchants.first["name"]).to eq("Bob")
   end
 end
