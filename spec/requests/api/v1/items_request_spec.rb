@@ -26,7 +26,7 @@ RSpec.describe "Items API" do
     end
 
     it "can find one item" do
-      item = create_list(:item, 3)
+      item = create_list(:item, 3, unit_price: 1006)
 
       get "/api/v1/items/find?name=#{item[1].name}"
 
@@ -34,7 +34,7 @@ RSpec.describe "Items API" do
 
       expect(response).to be_success
       expect(json["name"]).to eq(item[1].name)
-      expect(json["unit_price"]).to eq(item[1].unit_price)
+      expect(json["unit_price"]).to eq("10.06")
 
       get "/api/v1/items/find?description=#{item[0].description}"
 
@@ -42,15 +42,15 @@ RSpec.describe "Items API" do
 
       expect(response).to be_success
       expect(json["description"]).to eq(item[0].description)
-      expect(json["unit_price"]).to eq(item[0].unit_price)
+      expect(json["unit_price"]).to eq("10.06")
 
       get "/api/v1/items/find?unit_price=#{item[2].unit_price}"
 
       json = JSON.parse(response.body)
 
       expect(response).to be_success
-      expect(json["description"]).to eq(item[2].description)
-      expect(json["name"]).to eq(item[2].name)
+      expect(json["description"]).to eq(item[0].description)
+      expect(json["name"]).to eq(item[0].name)
     end
 
     it "can find multiple items" do

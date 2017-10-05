@@ -7,7 +7,7 @@ FactoryGirl.define do
       "One Wheeled Madness #{x}"
     end
     sequence :unit_price do |x|
-      x
+      1000 + x
     end
     merchant_id 1
   end
