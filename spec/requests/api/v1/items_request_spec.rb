@@ -35,6 +35,32 @@ RSpec.describe "Items API" do
       expect(response).to be_success
       expect(json["name"]).to eq(item[1].name)
       expect(json["unit_price"]).to eq(item[1].unit_price)
+
+      get "/api/v1/items/find?description=#{item[0].description}"
+
+      json = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(json["description"]).to eq(item[0].description)
+      expect(json["unit_price"]).to eq(item[0].unit_price)
+
+      get "/api/v1/items/find?unit_price=#{item[0].unit_price}"
+
+      json = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(json["description"]).to eq(item[2].description)
+      expect(json["merchant_id"]).to eq(item[2].merchant_id)
+    end
+
+    it "can find multiple items" do
+      items = create_list(:item, 5)
+      binding.pry
+      get "/api/v1/items/find_all?name=#{items[1].name}"
+
+      json = JSON.parse(response.body)
+
+      expect(response).to be_success
     end
   end
 end
