@@ -10,4 +10,14 @@ RSpec.describe "Merchant BI Endpoints" do
       expect(response).to be_success
     end
   end
+
+  context "multiple merchant endpoints" do
+    it "sends the top X merchants ranked by total revenue" do
+      merchant = create(:merchant)
+
+      get "/api/v1/merchants/most_revenue?"
+
+      expect(response).to be_success
+    end
+  end
 end
