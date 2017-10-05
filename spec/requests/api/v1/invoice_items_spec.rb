@@ -3,7 +3,11 @@ require 'rails_helper'
 RSpec.describe "Invoice Items API" do
   context "Get /invoice_items" do
     it "sends a list invoice item" do
-      create_list(:invoice_item, 3)
+      customer = create(:customer)
+      merchant = create(:merchant)
+      item = create(:item, merchant_id: merchant.id)
+      invoice = create(:invoice, customer_id: customer.id)
+      create_list(:invoice_item, 3, invoice_id: invoice.id)
 
       get '/api/v1/invoice_items.json'
 
@@ -14,7 +18,11 @@ RSpec.describe "Invoice Items API" do
     end
 
     it "sends one invoice item" do
-      invoice_item = create(:invoice_item)
+      customer = create(:customer)
+      merchant = create(:merchant)
+      item = create(:item, merchant_id: merchant.id)
+      invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+      invoice_item = create(:invoice_item, invoice_id: invoice.id, item_id: item.id)
 
       get "/api/v1/invoice_items/#{invoice_item.id}"
 
@@ -26,7 +34,11 @@ RSpec.describe "Invoice Items API" do
     end
 
     it "can find one invoice item" do
-      invoice_item = create(:invoice_item)
+      customer = create(:customer)
+      merchant = create(:merchant)
+      item = create(:item, merchant_id: merchant.id)
+      invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+      invoice_item = create(:invoice_item, invoice_id: invoice.id, item_id: item.id)
 
       get "/api/v1/invoice_items/find?item_id=#{invoice_item.item_id}"
 
@@ -38,7 +50,11 @@ RSpec.describe "Invoice Items API" do
     end
 
     it "can find multiple items" do
-      invoice_items = create_list(:invoice_item, 3)
+      customer = create(:customer)
+      merchant = create(:merchant)
+      item = create(:item, merchant_id: merchant.id)
+      invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+      invoice_items = create_list(:invoice_item, 3, invoice_id: invoice.id, item_id: item.id)
 
       get "/api/v1/invoice_items/find_all?quantity=#{invoice_items[1].quantity}"
 
@@ -50,7 +66,11 @@ RSpec.describe "Invoice Items API" do
     end
 
     it "can find a random item" do
-      invoice_items = create_list(:invoice_item, 5)
+      customer = create(:customer)
+      merchant = create(:merchant)
+      item = create(:item, merchant_id: merchant.id)
+      invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+      invoice_items = create_list(:invoice_item, 5, item_id: item.id, invoice_id: invoice.id)
 
       get "/api/v1/invoice_items/random.json"
 
