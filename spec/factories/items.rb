@@ -1,8 +1,14 @@
 FactoryGirl.define do
   factory :item do
-    name "MyString"
-    description "MyString"
-    unit_price 1
+    sequence :name do |x|
+      "Unicycle #{x}"
+    end
+    sequence :description do |x|
+      "One Wheeled Madness #{x}"
+    end
+    sequence :unit_price do |x|
+      1000 + x
+    end
     merchant_id 1
   end
 end
