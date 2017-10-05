@@ -25,9 +25,9 @@ describe "Invoices API" do
       expect(inv["merchant_id"]).to eq(invoice.merchant_id)
     end
 
-    it "can find one item" do
+    it "can find one invoice" do
       invoice = create(:invoice)
-
+      
       get "/api/v1/invoices/find?customer_id=#{invoice.customer_id}"
 
       inv = JSON.parse(response.body)
