@@ -14,9 +14,13 @@ module Api
         private
 
         def search_params
-          params.permit(:id, :item_id, :invoice_id, :quantity, :unit_price, :created_at, :updated_at)
+          if params["unit_price"]
+            params["unit_price"] = params["unit_price"].delete('.')
+            params.permit(:id, :item_id, :invoice_id, :quantity, :unit_price, :created_at, :updated_at)
+          else
+            params.permit(:id, :item_id, :invoice_id, :quantity, :unit_price, :created_at, :updated_at)
+          end
         end
-
       end
     end
   end
