@@ -23,7 +23,9 @@ describe "Merchant Relationships API" do
     end
 
     it "sends invoices associated with that merchant" do
-      merchant = create(:merchant, :with_invoices)
+      customer = create(:customer)
+      merchant = create(:merchant)
+      invoices = create_list(:invoice, 3, merchant_id: merchant.id, customer_id: customer.id)
 
       get "/api/v1/merchants/#{merchant.id}/invoices"
 

@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe "Items API" do
   context "GET /items" do
     it "sends a list of items" do
-      create_list(:item, 3)
+      merchant = create(:merchant)
+      create_list(:item, 3, merchant_id: merchant.id)
 
       get "/api/v1/items.json"
 
@@ -14,7 +15,8 @@ RSpec.describe "Items API" do
     end
 
     it "sends one item" do
-      item = create(:item)
+      merchant = create(:merchant)
+      item = create(:item, merchant_id: merchant.id)
 
       get "/api/v1/items/#{item.id}"
 
@@ -26,7 +28,8 @@ RSpec.describe "Items API" do
     end
 
     it "can find one item" do
-      item = create_list(:item, 3, unit_price: 1006)
+      merchant = create(:merchant)
+      item = create_list(:item, 3, unit_price: 1006, merchant_id: merchant.id)
 
       get "/api/v1/items/find?name=#{item[1].name}"
 
@@ -54,7 +57,8 @@ RSpec.describe "Items API" do
     end
 
     it "can find multiple items" do
-      items = create_list(:item, 5)
+      merchant = create(:merchant)
+      items = create_list(:item, 5, merchant_id: merchant.id)
 
       get "/api/v1/items/find_all?merchant_id=#{items[1].merchant_id}"
 
@@ -66,7 +70,8 @@ RSpec.describe "Items API" do
     end
 
     it "can find a random item" do
-      items = create_list(:item, 5)
+      merchant = create(:merchant)
+      items = create_list(:item, 5, merchant_id: merchant.id)
 
       get "/api/v1/items/random.json"
 

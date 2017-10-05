@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe "Transaction Relationships API" do
   context "GET /transactions/:id/invoice" do
     it "sends the associated invoice" do
-      invoice = create(:invoice)
+      merchant = create(:merchant)
+      customer = create(:customer)
+      invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
       transaction = create(:transaction, invoice_id: invoice.id)
 
       get "/api/v1/transactions/#{transaction.id}/invoice"

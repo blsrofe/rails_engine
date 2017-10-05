@@ -2,7 +2,9 @@ require 'rails_helper'
 
 describe "Transactions API" do
   it "sends a list of transactions" do
-    invoice = create(:invoice)
+    merchant = create(:merchant)
+    customer = create(:customer) 
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
     create_list(:transaction, 3, invoice_id: invoice.id)
 
     get '/api/v1/transactions.json'
@@ -13,7 +15,9 @@ describe "Transactions API" do
   end
 
   it "can get one transaction by its id" do
-    invoice = create(:invoice)
+    merchant = create(:merchant)
+    customer = create(:customer)
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
     trans = create(:transaction, invoice_id: invoice.id)
 
     get "/api/v1/transactions/#{trans.id}.json"
@@ -25,7 +29,9 @@ describe "Transactions API" do
   end
 
   it "can find one transaction" do
-    invoice = create(:invoice)
+    merchant = create(:merchant)
+    customer = create(:customer)
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
     transaction = create(:transaction, invoice_id: invoice.id)
 
     get "/api/v1/transactions/find?invoice_id=#{transaction.invoice_id}"
@@ -38,7 +44,9 @@ describe "Transactions API" do
   end
 
   it "can find multiple transactions" do
-    invoice = create(:invoice)
+    merchant = create(:merchant)
+    customer = create(:customer)
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
     transactions = create_list(:transaction, 3, invoice_id: invoice.id)
 
     get "/api/v1/transactions/find_all?invoice_id=#{invoice.id}"
@@ -54,7 +62,9 @@ describe "Transactions API" do
   end
 
   it "can find a random transaction" do
-    invoice = create(:invoice)
+    customer = create(:customer)
+    merchant = create(:merchant)
+    invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
     transactions = create_list(:transaction, 5, invoice_id: invoice.id)
 
     get "/api/v1/transactions/random.json"
