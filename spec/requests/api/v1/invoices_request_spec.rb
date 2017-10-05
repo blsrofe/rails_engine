@@ -29,9 +29,7 @@ describe "Invoices API" do
       expect(inv["merchant_id"]).to eq(invoice.merchant_id)
     end
 
-    it "can find one item" do
-      Customer.create!(id: 1, first_name: "Bill", last_name: "Smith")
-      Merchant.create!(id: 1, name: "Bob")
+    it "can find one invoice" do
       invoice = create(:invoice)
 
       get "/api/v1/invoices/find?customer_id=#{invoice.customer_id}"
