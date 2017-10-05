@@ -1,10 +1,12 @@
 module Api
   module V1
-    module Invoices
+    module Items
       class MerchantsController < ApplicationController
+
         def show
-          render json: Invoice.find(params[:id]).merchant
+          render json: Item.find(params[:id]).merchant
         end
+
       end
     end
   end

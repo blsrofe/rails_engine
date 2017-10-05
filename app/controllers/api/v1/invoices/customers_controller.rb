@@ -3,7 +3,7 @@ module Api
     module Invoices
       class CustomersController < ApplicationController
         def show
-          render json: Invoice.find(params[:id].customers
+          render json: Invoice.find(params[:id]).customer
         end
       end
     end
