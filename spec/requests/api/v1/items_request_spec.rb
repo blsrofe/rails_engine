@@ -75,5 +75,33 @@ RSpec.describe "Items API" do
       expect(response).to be_success
       expect(json.class).to be(Hash)
     end
+
+    it "returns a collection of associated invoice items" do
+      Customer.create!(id: 1, first_name: "Bob", last_name: "Smith")
+      Merchant.create!(id: 1, name: "Bob")
+      Invoice.create!(id: 1, customer_id: 1, merchant_id: 1, status: "shipped")
+      item = Item.create!(id: 1, name: "item_1", description: "something", unit_price: 200, merchant_id: 1)
+      InvoiceItem.create!(id: 1, invoice_id: 1, item_id: 1, quantity: 1, unit_price: 100)
+      InvoiceItem.create!(id: 2, invoice_id: 1, item_id: 1, quantity: 2, unit_price: 150)
+
+      get "/api/v1/items/#{item.id}/invoice_items"
+
+      invoice_items = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(invoice_items.count).to eq(2)
+    end
+
+    it "returns the associated merchant" do
+      Merchant.create!(id: 1, name: "Bob")
+      item = Item.create!(id: 1, name: "item_1", description: "something", unit_price: 200, merchant_id: 1)
+
+      get "/api/v1/items/#{item.id}/merchant"
+
+      merchant = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(merchant["name"]).to eq("Bob")
+    end
   end
 end

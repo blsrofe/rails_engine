@@ -3,9 +3,23 @@ require 'csv'
 desc "Import from csv file"
 task :import => [:environment] do
 
-    file = "db/merchants.csv"
+  counter = 0
 
-    counter = 0
+  file = "db/transactions.csv"
+  puts 'Transactions'
+  CSV.foreach(file, :headers => true) do |row|
+    Transaction.create(row.to_hash)
+    puts counter += 1
+  end
+
+  file = "db/invoice_items.csv"
+
+  CSV.foreach(file, :headers => true) do |row|
+    InvoiceItem.create(row.to_hash)
+    puts counter += 1
+  end
+
+    file = "db/merchants.csv"
 
     CSV.foreach(file, :headers => true) do |row|
       Merchant.create(row.to_hash)
@@ -19,19 +33,6 @@ task :import => [:environment] do
       puts counter += 1
     end
 
-    file = "db/transactions.csv"
-
-    CSV.foreach(file, :headers => true) do |row|
-      Transaction.create(row.to_hash)
-      puts counter += 1
-    end
-
-    file = "db/invoice_items.csv"
-
-    CSV.foreach(file, :headers => true) do |row|
-      InvoiceItem.create(row.to_hash)
-      puts counter += 1
-    end
 
     file = "db/invoices.csv"
 
