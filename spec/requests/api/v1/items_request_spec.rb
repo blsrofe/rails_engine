@@ -44,23 +44,36 @@ RSpec.describe "Items API" do
       expect(json["description"]).to eq(item[0].description)
       expect(json["unit_price"]).to eq(item[0].unit_price)
 
-      get "/api/v1/items/find?unit_price=#{item[0].unit_price}"
+      get "/api/v1/items/find?unit_price=#{item[2].unit_price}"
 
       json = JSON.parse(response.body)
 
       expect(response).to be_success
       expect(json["description"]).to eq(item[2].description)
-      expect(json["merchant_id"]).to eq(item[2].merchant_id)
+      expect(json["name"]).to eq(item[2].name)
     end
 
     it "can find multiple items" do
       items = create_list(:item, 5)
-      binding.pry
-      get "/api/v1/items/find_all?name=#{items[1].name}"
+
+      get "/api/v1/items/find_all?merchant_id=#{items[1].merchant_id}"
 
       json = JSON.parse(response.body)
 
       expect(response).to be_success
+      expect(json.count).to eq(5)
+      expect(json.class).to be(Array)
+    end
+
+    it "can find a random item" do
+      items = create_list(:item, 5)
+
+      get "/api/v1/items/random.json"
+
+      json = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(json.class).to be(Hash)
     end
   end
 end
