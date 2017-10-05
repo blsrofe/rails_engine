@@ -27,7 +27,7 @@ describe "Invoices API" do
 
     it "can find one invoice" do
       invoice = create(:invoice)
-
+      
       get "/api/v1/invoices/find?customer_id=#{invoice.customer_id}"
 
       inv = JSON.parse(response.body)
