@@ -11,6 +11,10 @@ RSpec.describe "Transaction Relationships API" do
       json = JSON.parse(response.body)
 
       expect(response).to be_success
+      expect(json["id"]).to eq(transaction.invoice.id)
+      expect(json["customer_id"]).to eq(transaction.invoice.customer_id)
+      expect(json["merchant_id"]).to eq(transaction.invoice.merchant_id)
+      expect(json["status"]).to eq(transaction.invoice.status)
     end
   end
 end
