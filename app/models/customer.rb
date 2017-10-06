@@ -13,5 +13,5 @@ class Customer < ApplicationRecord
       .group(:id)
       .order('transaction_count desc')
       .first
-  end  
+  end
 end

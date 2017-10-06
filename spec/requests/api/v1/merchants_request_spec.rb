@@ -90,7 +90,33 @@ describe "Merchants API" do
     expect(response).to be_success
 
     revenue = JSON.parse(response.body)
-    expect(revenue).to eq(8)
+    expect(revenue["revenue"]).to eq("8.0")
+  end
+
+  it "finds total revenue for merchant on a specific date" do
+    customer = Customer.create!(id: 1, first_name: "Bob", last_name: "Smith")
+    merchant = Merchant.create!(id: 1, name: "Larry")
+    item = Item.create!(id:1, name: "thing", description: "something", unit_price: 200, merchant_id: 1)
+    item_2 = Item.create!(id: 2, name: "thing_2", description: "something", unit_price: 100, merchant_id: 1)
+    item_3 = Item.create!(id: 3, name: "thing_3", description: "something", unit_price: 100, merchant_id: 1)
+    invoice = Invoice.create!(id: 1, customer_id: 1, merchant_id: 1, status: "shipped", created_at: "2012-03-16 11:55:05")
+    invoice_2 = Invoice.create!(id: 2, customer_id: 1, merchant_id: 1, status: "shipped")
+    invoice_3 = Invoice.create!(id: 3, customer_id: 1, merchant_id: 1, status: "shipped")
+    transaction = Transaction.create!(invoice_id: 1, credit_card_number: "4654405418249632", credit_card_expiration_date: "2012-03-27", result: "success")
+    transaction_2 = Transaction.create!(invoice_id: 2, credit_card_number: "4654405418249632", credit_card_expiration_date: "2012-03-27", result: "failed")
+    transaction_3 = Transaction.create!(invoice_id: 3, credit_card_number: "4654405418249632", credit_card_expiration_date: "2012-03-27", result: "success")
+    invoice_item = InvoiceItem.create!(item_id: 1, invoice_id: 1, quantity: 2, unit_price: 200)
+    invoice_item_2 = InvoiceItem.create!(item_id: 2, invoice_id: 1, quantity: 1, unit_price: 100)
+    invoice_item_3 = InvoiceItem.create!(item_id: 2, invoice_id: 2, quantity: 2, unit_price: 100)
+    invoice_item_4 = InvoiceItem.create!(item_id: 3, invoice_id: 3, quantity: 1, unit_price: 300)
+
+
+    get "/api/v1/merchants/#{merchant.id}/revenue?date=2012-03-16 11:55:05"
+
+    expect(response).to be_success
+
+    revenue = JSON.parse(response.body)
+    expect(revenue["revenue"]).to eq("5.0")
   end
 
   it "returns top merchants ranked by total number of items sold" do
