@@ -19,5 +19,13 @@ RSpec.describe "Merchant BI Endpoints" do
 
       expect(response).to be_success
     end
+
+    it "sends sends total revenue for all merchants on date X" do
+      merchant = create(:merchant)
+
+      get "/api/v1/merchants/revenue"
+
+      expect(response).to be_success
+    end
   end
 end
