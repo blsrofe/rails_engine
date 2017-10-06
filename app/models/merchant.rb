@@ -38,7 +38,7 @@ class Merchant < ApplicationRecord
 
 
   def favorite_customer
-    Customer.select("customers.*, count(invoices.id)")
+    customers.select("customers.*, count(invoices.id)")
       .joins(invoices: [:transactions])
       .merge(Transaction.successful)
       .where('invoices.merchant_id = ?', self.id)
@@ -46,7 +46,7 @@ class Merchant < ApplicationRecord
       .order("count DESC")
       .first
   end
-  
+
   def total_revenue_by_date(date)
     invoices
       .joins(:transactions, :invoice_items)

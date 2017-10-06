@@ -1,0 +1,67 @@
+class Item < ApplicationRecord
+2
+  has_many :invoice_items
+3
+  has_many :invoices, through: :invoice_items
+4
+  belongs_to :merchant
+5
+​
+6
+  default_scope {order(:id)}
+7
+​
+8
+  def self.most_revenue(quantity)
+9
+    unscoped.select("items.*, sum(invoice_items.unit_price * invoice_items.quantity) AS revenue")
+10
+      .joins(:invoice_items)
+11
+      .group("items.id")
+12
+      .order("revenue DESC")
+13
+      .limit(quantity)
+14
+  end
+15
+  def self.most_items(num_of_records)
+16
+    unscoped.select('items.*, sum(invoice_items.quantity) as number_sold')
+17
+    .joins(invoice_items: [invoice: [:transactions]])
+18
+    .merge(Transaction.successful)
+19
+    .group(:id)
+20
+    .order('number_sold desc')
+21
+    .limit(num_of_records)
+22
+  end
+23
+​
+24
+  def best_day
+25
+    invoices
+26
+      .select('invoices.*, sum(invoice_items.quantity) as sales')
+27
+      .joins(:invoice_items, :transactions)
+28
+      .merge(Transaction.successful)
+29
+      .group(:id)
+30
+      .order('sales desc, invoices.created_at desc')
+31
+      .first
+32
+  end
+33
+end
+34
+​
