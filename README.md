@@ -14,7 +14,6 @@ Rails 5.1.3
 ### Configuration
 
 `$ bundle`  
-`$ rails g rspec:install`
 
 ### Database setup
 
