@@ -1,24 +1,29 @@
-# README
+# rails_engine
+---
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Rales Engines is an api that offers endpoints for consumption of Sales Engine data
 
-Things you may want to cover:
+### Ruby Version 
+Ruby 2.4.1  
+Rails 5.1.3
 
-* Ruby version
+## Install
 
-* System dependencies
+`$ git clone git@github.com:blsrofe/rails_engine.git`
 
-* Configuration
+### Configuration
 
-* Database creation
+`$ bundle`  
+`$ rails g rspec:install`
 
-* Database initialization
+### Database setup
 
-* How to run the test suite
+create the database:  
+`$ rails db:create`  
+run migrations:  
+`$ rails db:migrate`  
+import seed data:  
+`$ rake import`
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Running tests:  
+`$ rspec`
