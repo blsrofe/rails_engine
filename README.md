@@ -4,7 +4,7 @@
 Rales Engines is an api that offers endpoints for consumption of Sales Engine data
 
 ### Ruby Version 
-Ruby 2.4.1
+Ruby 2.4.1  
 Rails 5.1.3
 
 ## Install
@@ -19,11 +19,11 @@ Rails 5.1.3
 ### Database setup
 
 create the database:  
-`$ rails db:create`
+`$ rails db:create`  
 run migrations:  
-`$ rails db:migrate`
+`$ rails db:migrate`  
 import seed data:  
 `$ rake import`
 
 Running tests:  
-`$rspec`
+`$ rspec`
