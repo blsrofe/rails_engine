@@ -13,17 +13,17 @@ Rails 5.1.3
 
 ### Configuration
 
-`$ bundle`
+`$ bundle`  
 `$ rails g rspec:install`
 
 ### Database setup
 
-create the database:
+create the database:  
 `$ rails db:create`
-run migrations:
+run migrations:  
 `$ rails db:migrate`
-import seed data:
+import seed data:  
 `$ rake import`
 
-Running tests:
+Running tests:  
 `$rspec`
