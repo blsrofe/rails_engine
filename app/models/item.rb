@@ -5,6 +5,15 @@ class Item < ApplicationRecord
 
   default_scope {order(:id)}
 
+
+  def self.most_revenue(quantity)
+    unscoped.select("items.*, sum(invoice_items.unit_price * invoice_items.quantity) AS revenue")
+      .joins(:invoice_items)
+      .group("items.id")
+      .order("revenue DESC")
+      .limit(quantity)
+  end
+  
   def self.most_items(num_of_records)
     unscoped.select('items.*, sum(invoice_items.quantity) as number_sold')
     .joins(invoice_items: [invoice: [:transactions]])
@@ -25,23 +34,3 @@ class Item < ApplicationRecord
   end
 end
 
-# .joins(invoice_items: [invoice: [:transactions]])
-
-# def self.sold_most_items(num_of_records)
-#   select("merchants.*, sum(invoice_items.quantity) as quantity")
-#     .joins(:transactions, :invoice_items)
-#     .merge(Transaction.successful)
-#     .group(:id)
-#     .order('quantity desc')
-#     .limit(num_of_records)
-# end
-
-# def favorite_merchant
-#   merchants
-#     .select('merchants.*, count(transactions.id) as transaction_count')
-#     .joins(invoices: [:transactions])
-#     .merge(Transaction.successful)
-#     .group(:id)
-#     .order('transaction_count desc')
-#     .first
-# end
